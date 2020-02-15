@@ -10,7 +10,7 @@ Hardware Required:
 2. Aftermarket head unit (Note: Must support Auxiliary input)
 3. Plugable USB Bluetooth 4.0 Low Energy Micro Adapter 
 4. 2A Car Supply / Switch or Micro USB Car Charger
-5. ELM327 Bluetooth Adapter or ELM327 USB Cable (this forks assumes ELM327 is configured for 2MSPS!!!)
+5. ELM327 Bluetooth Adapter or ELM327 USB Cable (this forks assumes ELM327 is configured for 2Mbaud!!!)
 6. RCA cable 
 7. Keyboard (*optional)
 
