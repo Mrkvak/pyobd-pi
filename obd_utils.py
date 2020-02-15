@@ -10,7 +10,7 @@ def scanSerial():
 		s = serial.Serial("/dev/rfcomm"+str(i))
 		available.append( (str(s.port)))
 		s.close()   # explicit close 'cause of delayed GC in java
-      except serial.SerialException:
+      except:
 		pass
  # Enable USB connection
     for i in range(256):
@@ -18,7 +18,7 @@ def scanSerial():
         s = serial.Serial("/dev/ttyUSB"+str(i))
         available.append(s.portstr)
         s.close()   # explicit close 'cause of delayed GC in java
-      except serial.SerialException:
+      except:
         pass
  # Enable obdsim 
     #for i in range(256):

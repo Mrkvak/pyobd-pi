@@ -74,7 +74,7 @@ class OBDPort:
      def __init__(self,portnum,_notify_window,SERTIMEOUT,RECONNATTEMPTS):
          """Initializes port by resetting device and gettings supported PIDs. """
          # These should really be set by the user.
-         baud     = 38400
+         baud     = 230400
          databits = 8
          par      = serial.PARITY_NONE  # parity
          sb       = 1                   # stop bits
@@ -141,7 +141,7 @@ class OBDPort:
              for c in cmd:
                  self.port.write(c)
              self.port.write("\r\n")
-             #debug_display(self._notify_window, 3, "Send command:" + cmd)
+             debug_display(self._notify_window, 3, "Send command:" + cmd)
 
      def interpret_result(self,code):
          """Internal use only: not a public interface"""
@@ -194,7 +194,7 @@ class OBDPort:
                  if buffer != "" or c != ">": #if something is in buffer, add everything
                     buffer = buffer + c
                     
-             #debug_display(self._notify_window, 3, "Get result:" + buffer)
+             debug_display(self._notify_window, 3, "Get result:" + buffer)
              if(buffer == ""):
                 return None
              return buffer
@@ -241,10 +241,13 @@ class OBDPort:
          
          statusTrans.append(str(statusRes[0])) #DTCs
          
-         if statusRes[1]==0: #MIL
-            statusTrans.append("Off")
+         if len(statusRes) <= 2:
+           statusTrans.append("NA")
          else:
-            statusTrans.append("On")
+            if statusRes[1]==0: #MIL
+               statusTrans.append("Off")
+            else:
+               statusTrans.append("On")
             
          for i in range(2,len(statusRes)): #Tests
               statusTrans.append(statusText[statusRes[i]]) 
@@ -267,7 +270,7 @@ class OBDPort:
           
           print "Number of stored DTC:" + str(dtcNumber) + " MIL: " + str(mil)
           # get all DTC, 3 per mesg response
-          for i in range(0, ((dtcNumber+2)/3)):
+          for i in range(0, ((int(dtcNumber)+2)/3)):
             self.send_command(GET_DTC_COMMAND)
             res = self.get_result()
             print "DTC result:" + res

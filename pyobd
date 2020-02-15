@@ -140,13 +140,14 @@ class MyApp(wx.App):
             wx.PostEvent(self._notify_window, ResultEvent([0,0,"X"]))
             wx.PostEvent(self._notify_window, DebugEvent([1,"Communication initialized..."]))
             
-            for i in range(1, len(self.supp)):
-                if self.supp[i-1] == "1": #put X in coloum if PID is supported
+#            for i in range(1, len(self.supp)):
+            for i in range(1, 85):
+#                if self.supp[i-1] == "1": #put X in coloum if PID is supported
                     self.active.append(1)
                     wx.PostEvent(self._notify_window, ResultEvent([i,0,"X"]))
-                else:
-                    self.active.append(0)
-                    wx.PostEvent(self._notify_window, ResultEvent([i,0,""]))
+#                else:
+#                    self.active.append(0)
+#                    wx.PostEvent(self._notify_window, ResultEvent([i,0,""]))
             return "OK"
         
         def run(self):

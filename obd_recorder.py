@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import obd_io
 import serial
@@ -7,7 +7,7 @@ import obd_sensors
 from datetime import datetime
 import time
 import getpass
-
+import sys
 
 from obd_utils import scanSerial
 
@@ -18,7 +18,12 @@ class OBD_Recorder():
         localtime = time.localtime(time.time())
         filename = path+"car-"+str(localtime[0])+"-"+str(localtime[1])+"-"+str(localtime[2])+"-"+str(localtime[3])+"-"+str(localtime[4])+"-"+str(localtime[5])+".log"
         self.log_file = open(filename, "w", 128)
-        self.log_file.write("Time,RPM,MPH,Throttle,Load,Fuel Status\n");
+#        self.log_file.write("Time,RPM,km/h,Throttle,Load,S-T fuel trim,L-T fuel trim,Coolant temp,Intake manifold pressure,Timing advance,Intake air temp,Air flow rate (MAF),O2 sensor 1-2 percent,O2 sensor 1-2 volts,Fuel Status\n");
+#        self.log_file.write("Time,Throttle,O2 sensor 1-1 current, O2 sensor 1-2 volts\n");
+        self.log_file.write("Time,O2 sensor 1-1 current, O2 sensor 1-2 volts\n");
+
+        print("Time,O2 sensor 1-1 current, O2 sensor 1-2 volts\n");
+
 
         for item in log_items:
             self.add_log_item(item)
@@ -60,7 +65,7 @@ class OBD_Recorder():
         
         while 1:
             localtime = datetime.now()
-            current_time = str(localtime.hour)+":"+str(localtime.minute)+":"+str(localtime.second)+"."+str(localtime.microsecond)
+            current_time = str(localtime.hour)+"-"+str(localtime.minute)+"-"+str(localtime.second)+"."+str(localtime.microsecond/1000)
             log_string = current_time
             results = {}
             for index in self.sensorlist:
@@ -68,9 +73,11 @@ class OBD_Recorder():
                 log_string = log_string + ","+str(value)
                 results[obd_sensors.SENSORS[index].shortname] = value;
 
-            gear = self.calculate_gear(results["rpm"], results["speed"])
+            #gear = self.calculate_gear(results["rpm"], results["speed"])
             log_string = log_string #+ "," + str(gear)
             self.log_file.write(log_string+"\n")
+            print(log_string)
+            sys.stdout.flush()
 
             
     def calculate_gear(self, rpm, speed):
@@ -94,8 +101,12 @@ class OBD_Recorder():
         return gear
         
 username = getpass.getuser()  
-logitems = ["rpm", "speed", "throttle_pos", "load", "fuel_status"]
-o = OBD_Recorder('/home/'+username+'/pyobd-pi/log/', logitems)
+#time,RPM,km/h,Throttle,Load,S-T fuel trim,L-T fuel trim,Coolant temp,Intake manifold pressure,Timing advance,Intake air temp,Air flow rate (MAF),O2 sensor 1-2 percent,O2 sensor 1-2 volts,Fuel Status\n");
+#Time,RPM,Throttle,S-T fuel trim,L-T fuel trim,O2 sensor 1-1 current, O2 sensor 1-2 volts
+logitems = ["o211-a", "o212-v"]
+#o = OBD_Recorder('/home/'+username+'/pyobd-pi/log/', logitems)
+o = OBD_Recorder('./log/', logitems)
+
 o.connect()
 
 if not o.is_connected():
