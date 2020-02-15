@@ -34,7 +34,7 @@ class OBD_Recorder():
     def connect(self):
         portnames = scanSerial()
         #portnames = ['COM10']
-        print portnames
+        print(portnames)
         for port in portnames:
             self.port = obd_io.OBDPort(port, None, 2, 2)
             if(self.port.State == 0):
@@ -44,7 +44,7 @@ class OBD_Recorder():
                 break
 
         if(self.port):
-            print "Connected to "+self.port.port.name
+            print("Connected to "+self.port.port.name)
             
     def is_connected(self):
         return self.port
@@ -53,7 +53,7 @@ class OBD_Recorder():
         for index, e in enumerate(obd_sensors.SENSORS):
             if(item == e.shortname):
                 self.sensorlist.append(index)
-                print "Logging item: "+e.name
+                print("Logging item: "+e.name)
                 break
             
             
@@ -61,7 +61,7 @@ class OBD_Recorder():
         if(self.port is None):
             return None
         
-        print "Logging started"
+        print("Logging started")
         
         while 1:
             localtime = datetime.now()
@@ -96,7 +96,7 @@ class OBD_Recorder():
 
         current_gear_ratio = (rps*tyre_circumference)/(mps*primary_gear*final_drive)
         
-        #print current_gear_ratio
+        #print(current_gear_ratio)
         gear = min((abs(current_gear_ratio - i), i) for i in self.gear_ratios)[1] 
         return gear
         
@@ -110,5 +110,5 @@ o = OBD_Recorder('./log/', logitems)
 o.connect()
 
 if not o.is_connected():
-    print "Not connected"
+    print("Not connected")
 o.record_data()
