@@ -313,8 +313,8 @@ SENSORS = [
 
 def test():
     for i in SENSORS:
-        print(i.name, i.value("F"))
+        print((i.name, i.value("F")))
 
 if __name__ == "__main__":
     import sys
-    print(oxygen_sensor_current(sys.argv[1]))
+    print((oxygen_sensor_current(sys.argv[1])))

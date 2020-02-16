@@ -139,8 +139,8 @@ class OBDPort:
              self.port.flushOutput()
              self.port.flushInput()
              for c in cmd:
-                 self.port.write(c)
-             self.port.write("\r\n")
+                 self.port.write(c.encode())
+             self.port.write("\r\n".encode())
              debug_display(self._notify_window, 3, "Send command:" + cmd)
 
      def interpret_result(self,code):
@@ -152,15 +152,15 @@ class OBDPort:
          # 9 seems to be the length of the shortest valid response
          if len(code) < 7:
              #raise Exception("BogusCode")
-             print("boguscode?"+code)
+             print(("boguscode?"+code))
          
          # get the first thing returned, echo should be off
-         code = string.split(code, "\r")
+         code = code.split("\r")
          code = code[0]
          
          #remove whitespace
-         code = string.split(code)
-         code = string.join(code, "")
+         code = code.split()
+         code = "".join(code)
          
          #cables can behave differently 
          if code[:6] == "NODATA": # there is no such sensor
@@ -177,7 +177,7 @@ class OBDPort:
          if self.port is not None:
              buffer = ""
              while 1:
-                 c = self.port.read(1)
+                 c = self.port.read(1).decode("utf-8")
                  if len(c) == 0:
                     if(repeat_count == 5):
                         break
@@ -268,12 +268,12 @@ class OBDPort:
           DTCCodes = []
           
           
-          print("Number of stored DTC:" + str(dtcNumber) + " MIL: " + str(mil))
+          print(("Number of stored DTC:" + str(dtcNumber) + " MIL: " + str(mil)))
           # get all DTC, 3 per mesg response
-          for i in range(0, ((int(dtcNumber)+2)/3)):
+          for i in range(0, ((int(dtcNumber)+2)//3)):
             self.send_command(GET_DTC_COMMAND)
             res = self.get_result()
-            print("DTC result:" + res)
+            print(("DTC result:" + res))
             for i in range(0, 3):
                 val1 = hex_to_int(res[3+i*6:5+i*6])
                 val2 = hex_to_int(res[6+i*6:8+i*6]) #get DTC codes from response (3 DTC each 2 bytes)
@@ -293,7 +293,7 @@ class OBDPort:
           if res[:7] == "NODATA": #no freeze frame
             return DTCCodes
           
-          print("DTC freeze result:" + res)
+          print(("DTC freeze result:" + res))
           for i in range(0, 3):
               val1 = hex_to_int(res[3+i*6:5+i*6])
               val2 = hex_to_int(res[6+i*6:8+i*6]) #get DTC codes from response (3 DTC each 2 bytes)

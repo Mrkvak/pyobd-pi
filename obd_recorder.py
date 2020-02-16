@@ -44,7 +44,7 @@ class OBD_Recorder():
                 break
 
         if(self.port):
-            print("Connected to "+self.port.port.name)
+            print(("Connected to "+self.port.port.name))
             
     def is_connected(self):
         return self.port
@@ -53,7 +53,7 @@ class OBD_Recorder():
         for index, e in enumerate(obd_sensors.SENSORS):
             if(item == e.shortname):
                 self.sensorlist.append(index)
-                print("Logging item: "+e.name)
+                print(("Logging item: "+e.name))
                 break
             
             

@@ -27,7 +27,7 @@ class OBD_Capture():
                 break
 
         if(self.port):
-            print("Connected to "+self.port.port.name)
+            print(("Connected to "+self.port.port.name))
             
     def is_connected(self):
         return self.port
